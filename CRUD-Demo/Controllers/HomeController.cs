@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using CRUD_Demo.Models;
+using CRUD_Demo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRUD_Demo.Controllers

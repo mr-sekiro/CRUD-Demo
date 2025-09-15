@@ -1,3 +1,11 @@
+using BusinessLogic.Services.AttachmentService;
+using BusinessLogic.Services.Classes;
+using BusinessLogic.Services.Interfaces;
+using DataAccess.Data.DbContexts;
+using DataAccess.Repositories.Classes;
+using DataAccess.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 namespace CRUD_Demo
 {
     public class Program
@@ -6,8 +14,26 @@ namespace CRUD_Demo
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+
+            #region Add services to the container
             builder.Services.AddControllersWithViews();
+
+            //builder.Services.AddScoped<AppDbContext>();
+            builder.Services.AddDbContext<AppDbContext>(dbContextOptions =>
+            {
+                //dbContextOptions.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]);
+                //dbContextOptions.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings")["DefaultConnection"]);
+                dbContextOptions.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+                dbContextOptions.UseLazyLoadingProxies();
+            }, ServiceLifetime.Scoped);
+
+            builder.Services.AddScoped<IDepartmentRepo, DepartmentRepo>();
+            builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+            builder.Services.AddScoped<IEmployeeRepo, EmployeeRepo>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddTransient<IAttachmentService, AttachmentService>(); 
+            #endregion
 
             var app = builder.Build();
 
@@ -33,4 +59,6 @@ namespace CRUD_Demo
             app.Run();
         }
     }
+    //Add-Migration "InitialCreate" -OutputDir "Data/Migrations" -Project "DataAccess" -StartupProject "CRUD-Demo" -Verbose
+    //Update-Database -Project "DataAccess" -StartupProject "CMS" -Verbose
 }
