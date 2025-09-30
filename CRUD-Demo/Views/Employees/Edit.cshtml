@@ -1,0 +1,38 @@
+﻿@model EmployeeViewModel
+@{
+    ViewData["Title"] = "Edit";
+    string source = string.Empty;
+}
+
+<div class="row justify-content-center align-content-center mt-3">
+    <h1 class="col-8 my-4">Edit Employee</h1>
+    @if (string.IsNullOrEmpty(Model.ImageName))
+        source = "Default.png";
+    else
+        source = Model.ImageName;
+
+    <div class="d-flex justify-content-center my-3">
+        <img src="~/Files/Images/@source"
+             alt="Employee Image"
+             class="rounded-circle shadow-lg border border-3 border-light"
+             style="width: 256px; height: 256px; object-fit: cover;" />
+    </div>
+
+    <form method="post" asp-controller="Employees" asp-action="Edit" class="row col-8" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly"></div>
+
+        <partial name="PartialViews/_CreateEditPartialView" />
+
+        <div class="mt-4 m-auto">
+            <input class="btn btn-success" type="submit" value="Save" />
+            <a asp-controller="Employees" asp-action="Index" class="btn btn-outline-dark">Back to list</a>
+        </div>
+    </form>
+</div>
+
+@section ValidationScripts
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js">
+    </script><script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
